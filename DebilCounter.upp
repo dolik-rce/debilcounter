@@ -1,0 +1,17 @@
+uses
+	Skylark,
+	plugin/sqlite3;
+
+file
+	DebilCounter.h,
+	favicon.png,
+	Model.sch,
+	Handlers.icpp,
+	Main.cpp,
+	ding.wav,
+	index.witz,
+	sorttable.js;
+
+mainconfig
+	"" = "MT SSE2";
+

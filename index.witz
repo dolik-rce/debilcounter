@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Debil Counter</title>
+	<script type="text/javascript" src="static/DebilCounter/sorttable.js"></script>
+	<script type="text/javascript" src="static/Skylark/skylark.js"></script>
+	<style>
+table { border-width: 0 0 1px 1px; border-style: solid; border-collapse: collapse; border-color: black; margin:auto; }
+td, th { border-width: 1px 1px 0 0; border-style: solid; margin: 0; padding: 5px; text-align: center; }
+#inc {
+ background-color: $CONF.BGCOLOR;
+ color: $CONF.FGCOLOR;
+ font-family: Arial;
+ font-weight: bold;
+ font-size: x-large;
+ -moz-border-radius: 15px;
+ border-radius: 15px;
+ padding: 20px;
+}
+#conf {
+ border : solid black 1px;
+ position: absolute;
+ background-color: white;
+ left: 10px;
+ top: 10px;
+ padding: 5px;
+ margin: auto;
+ text-align: right;
+}
+#login { text-align: right; }
+#inclink {text-decoration:none; margin: 20px; }
+#tbldiv { margin: 20px; text-align: center; }
+.error { color:red; }
+input { margin: 3px; }
+.story { margin: 10px; }
+.story .body {
+ background-color: $CONF.BGCOLOR;
+ color: $CONF.FGCOLOR;
+ font-family: Arial;
+ -moz-border-radius: 5px;
+ border-radius: 5px;
+ padding: 5px;
+ margin-left: 25%;
+ margin-right: 25%;
+}
+textarea {
+ width: 50%;
+ height: 100px;
+ margin-left: 25%;
+ margin-right: 25%;
+}
+.icon { width: 1eM; height: 1eM; }
+	</style>
+<script>
+var timeZoneOffset = new Date().getTimezoneOffset()*60000;
+var printDate = function(x) {
+	document.write((new Date(x+timeZoneOffset)).toLocaleString());
+}
+var toggleConf = function() {
+	var conf = document.getElementById('conf');
+	if (conf.style.display == 'none')
+		conf.style.display = 'block';
+	else
+		conf.style.display = 'none';
+	return false;
+}
+var updateConf = function(clear){
+	x=document.getElementById("inc");
+	c=document.getElementById("fcolumn");
+	f=document.getElementById("confForm");
+	if(clear) {
+		x.innerText = "$CONF.MSG";
+		c.innerText = "$CONF.FCOLUMN";
+		x.style.color = "";
+		x.style.backgroundColor = "";
+		return;
+	}
+	x.innerText = f[0].value;
+	c.innerText = f[1].value;
+	x.style.color = f[2].value;
+	x.style.backgroundColor = f[3].value;
+}
+var setTextFocus = function(elem) {
+	elem.focus();
+	elem.setSelectionRange(elem.value.length, elem.value.length);
+}
+var showEditForm = function(elem) {
+	var x=elem.nextElementSibling;
+	if (x.style.display=="none") {
+		x.style.display="";
+		setTextFocus(x.firstElementChild.firstElementChild);
+	} else {
+		x.style.display = "none";
+	}
+}
+</script>
+</head>
+<body>
+$if(.logged == "true")
+ <div id="login">
+  $.user<br>
+  <a href="" onclick="return toggleConf();">Nastavení</a><br>
+  <a href="logout">Odhlásit se</a>
+ </div>
+ <div align="center">
+  <a id="inclink" href="count">
+   <span id="inc">$CONF.MSG</span>
+  </a>
+ $if(PING == "true")
+ <form action=$Description method="POST" style="margin-top:30px">
+  <textarea name="desc">Jsem $CONF.FCOLUMN, protože </textarea><br>
+  $post_identity
+  <input type="hidden" name="date" value="$PING_TIMESTAMP">
+  <input type="submit" value="Odeslat">
+ </form>
+ $endif
+ </div>
+ <div id="conf" style="display:none;">
+  <small><a href="" onclick="updateConf(true); return toggleConf();" id="cancel">Zavřít ✕</a></small>
+  <form id="confForm" action="settings">
+   Popisek: <input type="text" name="msg" value="$CONF.MSG" onkeyup="updateConf()"><br>
+   První sloupec: <input type="text" name="fcolumn" value="$CONF.FCOLUMN" onkeyup="updateConf()"><br>
+   Barva textu: <input type="text" name="fgcolor" value="$CONF.FGCOLOR" onkeyup="updateConf()"><br>
+   Barva pozadí: <input type="text" name="bgcolor" value="$CONF.BGCOLOR" onkeyup="updateConf()"><br>
+   <small>Barvy mohou být cokoliv co zkousne CSS.</small><br>
+   <input type="submit" value="Nastavit">
+  </form>
+ </div>
+$else
+ <div id="login">
+ <form method="POST" action="login">
+  Jméno: <input name="login" type="text" value="$.user"><br>
+  $if(error == "nologin")
+   <span class="error">Zadej své jméno!</span><br>
+  $endif
+  Heslo: <input name="password" type="password"><br>
+  $if(error == "nopass")
+   <span class="error">Zadej heslo!</span><br>
+  $endif
+  $if(error == "auth")
+   <span class="error">Špatné heslo!</span><br>
+  $endif
+  <input type="submit" value="Registrovat / Přihlásit se">
+ </form>
+ </div>
+$endif
+</div>
+<br>
+<div id="tbldiv">
+<h2>Statistika</h2>
+<table class="sortable">
+<thead>
+<tr>
+ <th id="fcolumn">$CONF.FCOLUMN</th>
+ <th>Naposledy<span id="sorttable_sortrevind">&nbsp;&#x25BE;</span></th>
+ <th>Stáří</th>
+ <th>Dnes</th>
+ <th>Včera</th>
+ <th>Poslední týden</th>
+ <th>Poslední měsíc</th>
+ <th>Suma sumárum</th>
+</tr>
+</thead>
+$for(i in COUNTS)
+ <tr>
+ <th>$i.ID</th>
+ <td sorttable_customkey="$i.TIMESTAMP">$time(i.LAST)</td>
+ <td sorttable_customkey="$i.TIMESTAMP">$duration(i.LAST)</td>
+ <td>$i.TODAY</td>
+ <td>$i.YESTERDAY</td>
+ <td>$i.WEEK</td>
+ <td>$i.MONTH</td>
+ <td>$i.TOTAL</td>
+ </tr>
+$endfor
+</table>
+</div>
+<div style="text-align:center">
+<h2>Historie</h2>
+$for(i in STORIES)
+ <div class="story">
+  <div class="header">
+    $i.USER_ID, $time(i.DAY)
+    $if(i.USER_ID == .user)
+      <img class="icon" valign="middle" src="static/DebilCounter/edit.png" onclick="showEditForm(this)" alt="Upravit" title="Upravit">
+      <div style="display:none">
+ <form action=$Description method="POST">
+  $if(i.DESC != "") 
+<textarea name="desc">$i.DESC</textarea>
+$else
+<textarea name="desc">Jsem $CONF.FCOLUMN, protože </textarea>
+$endif
+<br>
+  $post_identity
+  <input type="hidden" name="date" value="$i.TIMESTAMP">
+  <input type="submit" value="Odeslat">
+ </form>
+    </div>
+    $endif
+  </div>
+  $if(i.DESC != "") <div class="body">$i.DESC</div> $endif
+ </div>
+$endfor
+</div>
+$if(PING == "true")
+<script>
+	new Audio('static/DebilCounter/ding.wav').play();
+</script>
+$endif
+</body>
+</html>

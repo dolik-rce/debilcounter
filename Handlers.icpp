@@ -1,0 +1,142 @@
+#include "DebilCounter.h"
+
+inline SqlVal If(const SqlBool& b, const SqlVal& trueval, const SqlVal& falseval) {
+	return Case(b, trueval)(falseval);
+	//return SqlFunc("if", SqlSet(SqlVal(~b, SqlS::HIGH), trueval, falseval));
+}
+
+inline SqlVal CountIf(const SqlVal& val, const SqlBool& b){
+	//SqlBool cond = (b && SqlBool(b(SqlS::COMP) + " is not NULL", SqlS::COMP));
+	return SqlFunc("sum", If(b, val, 0));
+}
+
+SKYLARK(HomePage, "") {
+	RLOG(http.GetPeerAddr());
+	Date today=GetSysDate();
+	SQLR * Select(ID, SqlMax(DAY).As("LAST"),
+		CountIf(1, NotNull(DAY)).As("TOTAL"),
+	    CountIf(1, SqlFunc("date", DAY) >= today-30).As("MONTH"),
+	    CountIf(1, SqlFunc("date", DAY) >= today-7).As("WEEK"),
+	    CountIf(1, SqlFunc("date", DAY) == today-1).As("YESTERDAY"),
+	    CountIf(1, SqlFunc("date", DAY) == today).As("TODAY"))
+	.From(USER)
+	.LeftJoin(DATA).On(ID == USER_ID)
+	.GroupBy(ID)
+	.OrderBy(Descending(SqlId("LAST")), Lower(ID));
+	ValueArray data;
+	ValueMap vm;
+	while (SQLR.Fetch(vm)){
+		vm.Set("LAST", ScanTime("ymd", AsString(vm["LAST"])));
+		vm.Set("TIMESTAMP", GetUTCSeconds(vm["LAST"]));
+		data.Add(vm);
+	}
+	Value stories;
+	SQLR * Select(USER_ID, DAY, DESC)
+	.From(DATA)
+	.Where(DESC != "")
+	.OrderBy(Descending(DAY))
+	.Limit(20);
+	while (SQLR.Fetch(vm)) {
+		RDUMP(vm["DAY"]);
+		RDUMP(AsString(vm["DAY"]));
+		RDUMP(vm["DAY"].GetTypeName());
+		RDUMP(GetUTCSeconds(vm["DAY"]));
+		vm.Set("TIMESTAMP", GetUTCSeconds(vm["DAY"]));
+		stories.Add(vm);
+	}
+	ValueMap conf;
+	if(http[".logged"]) {
+		SQLR * Select(MSG, FGCOLOR, BGCOLOR, FCOLUMN).From(USER).Where(ID == http[".user"]);
+		SQLR.Fetch(conf);
+	}
+	if (!IsNull(http[".ping"])) {
+		http("PING", true);
+		http("PING_TIMESTAMP", GetUTCSeconds(http[".ping"]));
+		http.SessionSet(".ping", Null);
+	}
+	http("COUNTS", data)("CONF", conf)("STORIES", stories);
+	http.RenderResult("DebilCounter/index.witz");
+}
+
+inline String EncryptPassword(const String& password, const String& salt) {
+	return salt + MD5String(salt + password);
+}
+
+SKYLARK(Login, "login:POST") {
+	RLOG(http.GetPeerAddr());
+	String hashed;
+	String login = http["login"];
+	String password = http["password"];
+	if (login.IsEmpty()) {
+		http.Redirect("/?error=nologin");
+		return;
+	}
+	if (password.IsEmpty()) {
+		http.Redirect("/?error=nopass");
+		return;
+	}
+	SQLR * Select(PWD).From(USER).Where(ID == login);
+	if (SQLR.Fetch(hashed)) {
+		if (hashed != EncryptPassword(password, hashed.Left(4))) {
+			http.Redirect("/?error=auth");
+			return;
+		}
+	} else {
+		String salt;
+		salt.Cat()
+		<< char(Random(74)+'0')
+		<< char(Random(74)+'0')
+		<< char(Random(74)+'0')
+		<< char(Random(74)+'0');
+		SQL * Insert(USER)(PWD, EncryptPassword(password, salt))(ID, login);
+	}
+	http.SessionSet("logged", true);
+	http.SessionSet("user", login);
+	http.Redirect(HomePage);
+}
+
+SKYLARK(Logout, "logout") {
+	RLOG(http.GetPeerAddr());
+	http.SessionSet("logged", false);
+	http.Redirect(HomePage);
+}
+
+SKYLARK(Count, "count") {
+	RLOG(http.GetPeerAddr());
+	if (http[".logged"]) {
+		Time time = GetSysTime();
+		SQL * Insert(DATA)(DAY, time)(USER_ID, http[".user"]);
+		http.SessionSet(".ping", time);
+	}
+	http.Redirect(HomePage);
+}
+
+SKYLARK(Description, "description:POST") {
+	RLOG(http.GetPeerAddr());
+	if (http[".logged"]) {
+		SQL * Update(DATA)(DESC, http["desc"])
+		      .Where(USER_ID == http[".user"] && DAY == TimeFromUTC(http.Int("date")));
+	}
+	http.Redirect(HomePage);
+}
+
+SKYLARK(Settings, "settings") {
+	RLOG(http.GetPeerAddr());
+	if (http[".logged"]) {
+		SQL * Update(USER)
+		            (FGCOLOR, http["fgcolor"])
+		            (BGCOLOR, http["bgcolor"])
+		            (FCOLUMN, http["fcolumn"])
+		            (MSG, http["msg"])
+		      .Where(ID == http[".user"]);
+	}
+	http.Redirect(HomePage);
+}
+
+SKYLARK(Favicon, "favicon.ico") {
+	http.Content("image/png", LoadDataFile("favicon.png"));
+}
+
+SKYLARK(CatchAll, "**") {
+	http.Redirect(HomePage);
+}
