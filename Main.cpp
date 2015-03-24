@@ -9,9 +9,6 @@ Value LocalTime(const Vector<Value>& arg, const Renderer *) {
 		return "";
 	RawHtmlText r;
 	r.text.Cat("<script type=\"text/javascript\">printDate(");
-	RDUMP(t);
-	RDUMP(GetUTCSeconds(t));
-	RDUMP(AsString(GetUTCSeconds(t)*1000));
 	r.text.Cat(AsString(GetUTCSeconds(t)*1000));
 	
 	r.text.Cat(");</script>");
@@ -33,9 +30,23 @@ Value Duration(const Vector<Value>& arg, const Renderer *)
 		return Format("%d`d %d`h %d`m %d`s", t/86400, (t%86400)/3600, ((t%86400)%3600)/60, ((t%86400)%3600)%60);
 }
 
+Value Render(const Vector<Value>& arg, const Renderer *r) {
+	if (arg.GetCount() < 1)
+		return "";
+	Renderer rr;
+	for(int i = 1; i < r->Variables().GetCount(); i++) {
+		rr(r->Variables().GetKey(i), r->Variables()[i]);
+	}
+	for(int i = 1; i < arg.GetCount(); i++) {
+		rr("_"+IntStr(i), arg[i]);
+	}
+	return rr.Render(AsString(arg[0]));
+}
+
 INITBLOCK {
 	Compiler::Register("time", LocalTime);
 	Compiler::Register("duration", Duration);
+	Compiler::Register("render", Render);
 };
 
 

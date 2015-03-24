@@ -1,0 +1,26 @@
+<table class="sortable">
+<thead>
+<tr>
+ <th id="fcolumn">$_1</th>
+ <th>Naposledy<span id="sorttable_sortrevind">&nbsp;&#x25BE;</span></th>
+ <th>Stáří</th>
+ <th>Dnes</th>
+ <th>Včera</th>
+ <th>Poslední týden</th>
+ <th>Poslední měsíc</th>
+ <th>Suma sumárum</th>
+</tr>
+</thead>
+$for(i in _2)
+ <tr>
+ <th>$i.ID</th>
+ <td sorttable_customkey="$i.TIMESTAMP">$time(i.LAST)</td>
+ <td sorttable_customkey="$i.TIMESTAMP">$duration(i.LAST)</td>
+ <td>$i.TODAY</td>
+ <td>$i.YESTERDAY</td>
+ <td>$i.WEEK</td>
+ <td>$i.MONTH</td>
+ <td>$i.TOTAL</td>
+ </tr>
+$endfor
+</table>

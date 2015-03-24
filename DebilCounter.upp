@@ -9,6 +9,8 @@ file
 	Handlers.icpp,
 	Main.cpp,
 	ding.wav,
+	table.witz,
+	button.witz,
 	index.witz,
 	sorttable.js;
 

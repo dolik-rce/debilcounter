@@ -1,0 +1,3 @@
+<a id="inclink" href=$Count(_1)>
+ <span id="inc" class="$_1">$_2</span>
+</a>

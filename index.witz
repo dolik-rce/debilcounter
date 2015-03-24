@@ -6,11 +6,29 @@
 	<script type="text/javascript" src="static/DebilCounter/sorttable.js"></script>
 	<script type="text/javascript" src="static/Skylark/skylark.js"></script>
 	<style>
-table { border-width: 0 0 1px 1px; border-style: solid; border-collapse: collapse; border-color: black; margin:auto; }
-td, th { border-width: 1px 1px 0 0; border-style: solid; margin: 0; padding: 5px; text-align: center; }
-#inc {
+table {
+ border-width: 0 0 1px 1px;
+ border-style: solid;
+ border-collapse: collapse;
+ border-color: black;
+ margin: 20px auto;
+}
+td, th {
+ border-width: 1px 1px 0 0;
+ border-style: solid;
+ margin: 0;
+ padding: 5px;
+ text-align: center;
+}
+.D {
  background-color: $CONF.BGCOLOR;
  color: $CONF.FGCOLOR;
+}
+.B {
+ background-color: $CONF.BGCOLOR2;
+ color: $CONF.FGCOLOR2;
+}
+#inc {
  font-family: Arial;
  font-weight: bold;
  font-size: x-large;
@@ -35,8 +53,6 @@ td, th { border-width: 1px 1px 0 0; border-style: solid; margin: 0; padding: 5px
 input { margin: 3px; }
 .story { margin: 10px; }
 .story .body {
- background-color: $CONF.BGCOLOR;
- color: $CONF.FGCOLOR;
  font-family: Arial;
  -moz-border-radius: 5px;
  border-radius: 5px;
@@ -104,17 +120,20 @@ $if(.logged == "true")
   <a href="logout">Odhlásit se</a>
  </div>
  <div align="center">
-  <a id="inclink" href="count">
-   <span id="inc">$CONF.MSG</span>
-  </a>
- $if(PING == "true")
- <form action=$Description method="POST" style="margin-top:30px">
-  <textarea name="desc">Jsem $CONF.FCOLUMN, protože </textarea><br>
-  $post_identity
-  <input type="hidden" name="date" value="$PING_TIMESTAMP">
-  <input type="submit" value="Odeslat">
- </form>
- $endif
+  $render("DebilCounter/button.witz", "D", CONF.MSG, CONF.FCOLUMN)
+  $render("DebilCounter/button.witz", "B", CONF.MSG2, CONF.FCOLUMN2)
+  $if(PING == "true")
+   <form action=$Description(PING_EVENT) method="POST" style="margin-top:30px">
+    $if(PING_EVENT=="D")
+     <textarea name="desc">Jsem $CONF.FCOLUMN, protože </textarea><br>
+    $else
+     <textarea name="desc">Jsem $CONF.FCOLUMN2, protože </textarea><br>
+    $endif
+    $post_identity
+    <input type="hidden" name="date" value="$PING_TIMESTAMP">
+    <input type="submit" value="Odeslat">
+   </form>
+  $endif
  </div>
  <div id="conf" style="display:none;">
   <small><a href="" onclick="updateConf(true); return toggleConf();" id="cancel">Zavřít ✕</a></small>
@@ -149,36 +168,12 @@ $endif
 <br>
 <div id="tbldiv">
 <h2>Statistika</h2>
-<table class="sortable">
-<thead>
-<tr>
- <th id="fcolumn">$CONF.FCOLUMN</th>
- <th>Naposledy<span id="sorttable_sortrevind">&nbsp;&#x25BE;</span></th>
- <th>Stáří</th>
- <th>Dnes</th>
- <th>Včera</th>
- <th>Poslední týden</th>
- <th>Poslední měsíc</th>
- <th>Suma sumárum</th>
-</tr>
-</thead>
-$for(i in COUNTS)
- <tr>
- <th>$i.ID</th>
- <td sorttable_customkey="$i.TIMESTAMP">$time(i.LAST)</td>
- <td sorttable_customkey="$i.TIMESTAMP">$duration(i.LAST)</td>
- <td>$i.TODAY</td>
- <td>$i.YESTERDAY</td>
- <td>$i.WEEK</td>
- <td>$i.MONTH</td>
- <td>$i.TOTAL</td>
- </tr>
-$endfor
-</table>
+$render("DebilCounter/table.witz", CONF.FCOLUMN, D_COUNTS)
+$render("DebilCounter/table.witz", CONF.FCOLUMN2, B_COUNTS)
 </div>
 <div style="text-align:center">
 <h2>Historie</h2>
-$for(i in STORIES)
+$for(i in HISTORY)
  <div class="story">
   <div class="header">
     $i.USER_ID, $time(i.DAY)
@@ -186,7 +181,7 @@ $for(i in STORIES)
       <img class="icon" valign="middle" src="static/DebilCounter/edit.png" onclick="showEditForm(this)" alt="Upravit" title="Upravit">
       <div style="display:none">
  <form action=$Description method="POST">
-  $if(i.DESC != "") 
+  $if(i.DESC != "")
 <textarea name="desc">$i.DESC</textarea>
 $else
 <textarea name="desc">Jsem $CONF.FCOLUMN, protože </textarea>
@@ -199,7 +194,7 @@ $endif
     </div>
     $endif
   </div>
-  $if(i.DESC != "") <div class="body">$i.DESC</div> $endif
+  $if(i.DESC != "") <div class="body $i.EVENT">$i.DESC</div> $endif
  </div>
 $endfor
 </div>
