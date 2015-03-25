@@ -28,7 +28,7 @@ td, th {
  background-color: $CONF.BGCOLOR2;
  color: $CONF.FGCOLOR2;
 }
-#inc {
+#incB, #incD {
  font-family: Arial;
  font-weight: bold;
  font-size: x-large;
@@ -46,19 +46,26 @@ td, th {
  margin: auto;
  text-align: right;
 }
+#conf span {
+ width: 180px;
+ display: inline-block;
+ text-align: center;
+ margin: 5px;
+}
 #login { text-align: right; }
 #inclink {text-decoration:none; margin: 20px; }
 #tbldiv { margin: 20px; text-align: center; }
 .error { color:red; }
-input { margin: 3px; }
-.story { margin: 10px; }
-.story .body {
+input {
+ margin: 3px;
+ width: 180px;
+}
+.story {
  font-family: Arial;
  -moz-border-radius: 5px;
  border-radius: 5px;
  padding: 5px;
- margin-left: 25%;
- margin-right: 25%;
+ margin: 10px 25%;
 }
 textarea {
  width: 50%;
@@ -82,20 +89,30 @@ var toggleConf = function() {
 	return false;
 }
 var updateConf = function(clear){
-	x=document.getElementById("inc");
-	c=document.getElementById("fcolumn");
+	x=document.getElementById("incD");
+	x2=document.getElementById("incB");
+	c=document.getElementById("fcolumnD");
+	c2=document.getElementById("fcolumnB");
 	f=document.getElementById("confForm");
 	if(clear) {
 		x.innerText = "$CONF.MSG";
+		x2.innerText = "$CONF.MSG2";
 		c.innerText = "$CONF.FCOLUMN";
+		c2.innerText = "$CONF.FCOLUMN2";
 		x.style.color = "";
+		x2.style.color = "";
 		x.style.backgroundColor = "";
+		x2.style.backgroundColor = "";
 		return;
 	}
 	x.innerText = f[0].value;
-	c.innerText = f[1].value;
-	x.style.color = f[2].value;
-	x.style.backgroundColor = f[3].value;
+	x2.innerText = f[1].value;
+	c.innerText = f[2].value;
+	c2.innerText = f[3].value;
+	x.style.color = f[4].value;
+	x2.style.color = f[5].value;
+	x.style.backgroundColor = f[6].value;
+	x2.style.backgroundColor = f[7].value;
 }
 var setTextFocus = function(elem) {
 	elem.focus();
@@ -138,11 +155,26 @@ $if(.logged == "true")
  <div id="conf" style="display:none;">
   <small><a href="" onclick="updateConf(true); return toggleConf();" id="cancel">Zavřít ✕</a></small>
   <form id="confForm" action="settings">
-   Popisek: <input type="text" name="msg" value="$CONF.MSG" onkeyup="updateConf()"><br>
-   První sloupec: <input type="text" name="fcolumn" value="$CONF.FCOLUMN" onkeyup="updateConf()"><br>
-   Barva textu: <input type="text" name="fgcolor" value="$CONF.FGCOLOR" onkeyup="updateConf()"><br>
-   Barva pozadí: <input type="text" name="bgcolor" value="$CONF.BGCOLOR" onkeyup="updateConf()"><br>
-   <small>Barvy mohou být cokoliv co zkousne CSS.</small><br>
+   <span>Negativní</span>
+   <span>Pozitivní</span>
+   <br>
+   Popisek:
+   <input type="text" name="msg" value="$CONF.MSG" onkeyup="updateConf()">
+   <input type="text" name="msg2" value="$CONF.MSG2" onkeyup="updateConf()">
+   <br>
+   První sloupec:
+   <input type="text" name="fcolumn" value="$CONF.FCOLUMN" onkeyup="updateConf()">
+   <input type="text" name="fcolumn2" value="$CONF.FCOLUMN2" onkeyup="updateConf()">
+   <br>
+   Barva textu:
+   <input type="text" name="fgcolor" value="$CONF.FGCOLOR" onkeyup="updateConf()">
+   <input type="text" name="fgcolor2" value="$CONF.FGCOLOR2" onkeyup="updateConf()">
+   <br>
+   Barva pozadí:
+   <input type="text" name="bgcolor" value="$CONF.BGCOLOR" onkeyup="updateConf()">
+   <input type="text" name="bgcolor2" value="$CONF.BGCOLOR2" onkeyup="updateConf()">
+   <br>
+   <small>Barvy mohou být cokoliv co zkousne CSS.</small>
    <input type="submit" value="Nastavit">
   </form>
  </div>
@@ -167,34 +199,33 @@ $endif
 </div>
 <br>
 <div id="tbldiv">
-<h2>Statistika</h2>
-$render("DebilCounter/table.witz", CONF.FCOLUMN, D_COUNTS)
-$render("DebilCounter/table.witz", CONF.FCOLUMN2, B_COUNTS)
+$render("DebilCounter/table.witz", CONF.FCOLUMN, D_COUNTS, "D")
+$render("DebilCounter/table.witz", CONF.FCOLUMN2, B_COUNTS, "B")
 </div>
 <div style="text-align:center">
 <h2>Historie</h2>
 $for(i in HISTORY)
- <div class="story">
+ <div class="story $i.EVENT">
   <div class="header">
     $i.USER_ID, $time(i.DAY)
     $if(i.USER_ID == .user)
-      <img class="icon" valign="middle" src="static/DebilCounter/edit.png" onclick="showEditForm(this)" alt="Upravit" title="Upravit">
-      <div style="display:none">
- <form action=$Description method="POST">
-  $if(i.DESC != "")
-<textarea name="desc">$i.DESC</textarea>
-$else
-<textarea name="desc">Jsem $CONF.FCOLUMN, protože </textarea>
-$endif
-<br>
-  $post_identity
-  <input type="hidden" name="date" value="$i.TIMESTAMP">
-  <input type="submit" value="Odeslat">
- </form>
-    </div>
+     <img class="icon" valign="middle" src="static/DebilCounter/edit.png" onclick="showEditForm(this)" alt="Upravit" title="Upravit">
+     <div style="display:none">
+      <form action=$Description method="POST">
+       $if(i.DESC != "")
+        <textarea name="desc">$i.DESC</textarea>
+       $else
+        <textarea name="desc">Jsem $CONF.FCOLUMN, protože </textarea>
+       $endif
+       <br>
+       $post_identity
+       <input type="hidden" name="date" value="$i.TIMESTAMP">
+       <input type="submit" value="Odeslat">
+      </form>
+     </div>
     $endif
   </div>
-  $if(i.DESC != "") <div class="body $i.EVENT">$i.DESC</div> $endif
+  $if(i.DESC != "") <div class="body">$i.DESC</div> $endif
  </div>
 $endfor
 </div>

@@ -1,7 +1,8 @@
+<h2>Kdo je $_1?</h2>
 <table class="sortable">
 <thead>
 <tr>
- <th id="fcolumn">$_1</th>
+ <th id="fcolumn$_3">$_1</th>
  <th>Naposledy<span id="sorttable_sortrevind">&nbsp;&#x25BE;</span></th>
  <th>Stáří</th>
  <th>Dnes</th>
