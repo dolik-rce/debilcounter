@@ -12,6 +12,8 @@ file
 	table.witz,
 	button.witz,
 	index.witz,
+	styles.css,
+	scripts.js,
 	sorttable.js;
 
 mainconfig

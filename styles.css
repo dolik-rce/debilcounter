@@ -1,0 +1,94 @@
+table {
+ border-width: 0 0 1px 1px;
+ border-style: solid;
+ border-collapse: collapse;
+ border-color: black;
+ margin: 20px auto;
+}
+
+td, th {
+ border-width: 1px 1px 0 0;
+ border-style: solid;
+ margin: 0;
+ padding: 5px;
+ text-align: center;
+}
+
+.D {
+ background-color: $CONF.BGCOLOR;
+ color: $CONF.FGCOLOR;
+}
+
+.B {
+ background-color: $CONF.BGCOLOR2;
+ color: $CONF.FGCOLOR2;
+}
+
+#incB, #incD {
+ font-family: Arial;
+ font-weight: bold;
+ font-size: x-large;
+ -moz-border-radius: 15px;
+ border-radius: 15px;
+ padding: 20px;
+}
+
+#conf {
+ border : solid black 1px;
+ position: absolute;
+ background-color: white;
+ left: 10px;
+ top: 10px;
+ padding: 5px;
+ margin: auto;
+ text-align: right;
+}
+
+#conf span {
+ width: 180px;
+ display: inline-block;
+ text-align: center;
+ margin: 5px;
+}
+
+#login {
+	text-align: right;
+}
+
+#inclink {
+	text-decoration:none;
+	margin: 20px;
+}
+
+#tbldiv {
+	margin: 20px;
+	text-align: center;
+}
+
+.error {
+	color:red;
+}
+
+input {
+	margin: 3px;
+	width: 180px;
+}
+
+.story {
+	font-family: Arial;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	padding: 5px;
+	margin: 10px 25%;
+}
+
+textarea {
+	width: 50%;
+	height: 100px;
+	margin-left: 25%;
+	margin-right: 25%;
+}
+
+.icon {
+	width: 1eM; height: 1eM;
+}
