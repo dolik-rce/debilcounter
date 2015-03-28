@@ -14,6 +14,18 @@
 </head>
 <body>
 $if(.logged == "true")
+ <div id="describe" style="display:none">
+   <div class="close" onclick="hideEditForm();" title="Zavřít">&#10005;</div>
+   <form action=$Description method="POST">
+    <textarea name="desc"></textarea>
+    $post_identity
+    <input type="hidden" name="date">
+    <input type="submit" value="Odeslat">
+   </form>
+ </div>
+ $if(PING == "true")
+  <script>showEditForm($PING_TIMESTAMP, '$PING_EVENT', '');</script>
+ $endif
  <div id="login">
   $.user<br>
   <a href="" onclick="return toggleConf();">Nastavení</a><br>
@@ -22,18 +34,6 @@ $if(.logged == "true")
  <div align="center">
   $render("DebilCounter/button.witz", "D", CONF.MSG, CONF.FCOLUMN)
   $render("DebilCounter/button.witz", "B", CONF.MSG2, CONF.FCOLUMN2)
-  $if(PING == "true")
-   <form action=$Description(PING_EVENT) method="POST" style="margin-top:30px">
-    $if(PING_EVENT=="D")
-     <textarea name="desc">Jsem $CONF.FCOLUMN, protože </textarea><br>
-    $else
-     <textarea name="desc">Jsem $CONF.FCOLUMN2, protože </textarea><br>
-    $endif
-    $post_identity
-    <input type="hidden" name="date" value="$PING_TIMESTAMP">
-    <input type="submit" value="Odeslat">
-   </form>
-  $endif
  </div>
  <div id="conf" style="display:none;">
   <small><a href="" onclick="updateConf(true); return toggleConf();" id="cancel">Zavřít ✕</a></small>
@@ -92,20 +92,7 @@ $for(i in HISTORY)
   <div class="header">
     $i.USER_ID, $time(i.DAY)
     $if(i.USER_ID == .user)
-     <img class="icon" valign="middle" src="static/DebilCounter/edit.png" onclick="showEditForm(this)" alt="Upravit" title="Upravit">
-     <div style="display:none">
-      <form action=$Description method="POST">
-       $if(i.DESC != "")
-        <textarea name="desc">$i.DESC</textarea>
-       $else
-        <textarea name="desc">Jsem $CONF.FCOLUMN, protože </textarea>
-       $endif
-       <br>
-       $post_identity
-       <input type="hidden" name="date" value="$i.TIMESTAMP">
-       <input type="submit" value="Odeslat">
-      </form>
-     </div>
+     <img class="icon" valign="middle" src="static/DebilCounter/edit.png" onclick="showEditForm($i.TIMESTAMP, '$i.EVENT', '$i.DESC')" alt="Upravit" title="Upravit">
     $endif
   </div>
   $if(i.DESC != "") <div class="body">$i.DESC</div> $endif

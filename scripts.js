@@ -40,17 +40,42 @@ var updateConf = function(clear){
 	x2.style.backgroundColor = f[7].value;
 }
 
+var textareaKeyDown = function(e){
+	e = e || event;
+	if (e.keyCode === 13) {
+		document.getElementById("describe").getElementsByTagName("form")[0].submit();
+		return false;
+	}
+	return true;
+}
+
 var setTextFocus = function(elem) {
 	elem.focus();
 	elem.setSelectionRange(elem.value.length, elem.value.length);
 }
 
-var showEditForm = function(elem) {
-	var x=elem.nextElementSibling;
-	if (x.style.display=="none") {
-		x.style.display="";
-		setTextFocus(x.firstElementChild.firstElementChild);
-	} else {
-		x.style.display = "none";
+var showEditForm = function(timestamp, event, desc) {
+	var x = document.getElementById("describe");
+	var d = x.getElementsByTagName("input")[1];
+	d.className = event;
+	d.value = "Upravit záznam z " + (new Date(timestamp*1000+timeZoneOffset)).toLocaleString();
+	var f = x.getElementsByTagName("form")[0];
+	f.date.value = timestamp;
+	var t = f.getElementsByTagName("textarea")[0];
+	t.onkeydown = textareaKeyDown;
+	if (desc != "") {
+		t.value = desc;
+	} else if (event == "D") {
+		t.value = "Jsem $CONF.FCOLUMN, protože "
+	} else if (event == "B") {
+		t.value = "Jsem $CONF.FCOLUMN2, protože "
 	}
+	x.style.left = window.innerWidth * 0.15 + "px";
+	x.style.top = window.innerHeight * 0.25 + "px";
+	x.style.display = "";
+	setTextFocus(t);
+}
+
+var hideEditForm = function(timestamp, event, desc) {
+	document.getElementById("describe").style.display = "none";
 }
