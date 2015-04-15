@@ -8,10 +8,9 @@ Value LocalTime(const Vector<Value>& arg, const Renderer *) {
 	if (IsNull(t))
 		return "";
 	RawHtmlText r;
-	r.text.Cat("<script type=\"text/javascript\">printDate(");
+	r.text.Cat("<img src=\"\" onerror=\"printDate(this, ");
 	r.text.Cat(AsString(GetUTCSeconds(t)*1000));
-	
-	r.text.Cat(");</script>");
+	r.text.Cat(");\">");
 	return RawPickToValue(r);
 }
 
@@ -43,10 +42,18 @@ Value Render(const Vector<Value>& arg, const Renderer *r) {
 	return rr.Render(AsString(arg[0]));
 }
 
+Value AsJSON(const Vector<Value>& arg, const Renderer *r) {
+	if (arg.GetCount() < 1)
+		return "";
+	return Raw(AsJSON(arg[0]));
+}
+
+
 INITBLOCK {
 	Compiler::Register("time", LocalTime);
 	Compiler::Register("duration", Duration);
 	Compiler::Register("render", Render);
+	Compiler::Register("json", AsJSON);
 };
 
 

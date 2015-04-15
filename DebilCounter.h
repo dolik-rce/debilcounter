@@ -10,6 +10,8 @@ using namespace Upp;
 #define  SCHEMADIALECT <plugin/sqlite3/Sqlite3Schema.h>
 #include <Sql/sch_header.h>
 
+Value Render(const Vector<Value>& arg, const Renderer *r);
+
 class DebilCounter : public SkylarkApp {
 public:
 	virtual void WorkThread();

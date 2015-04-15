@@ -5,6 +5,7 @@
 	<title>Debil Counter</title>
 	<script type="text/javascript" src="static/DebilCounter/sorttable.js"></script>
 	<script type="text/javascript" src="static/Skylark/skylark.js"></script>
+	$js_identity()
 	<style>
 		#include DebilCounter/styles.css
 	</style>
@@ -12,13 +13,13 @@
 		#include DebilCounter/scripts.js
 	</script>
 </head>
-<body>
+<body onload='checkChanges();'>
 $if(.logged == "true")
  <div id="describe" style="display:none">
    <div class="close" onclick="hideEditForm();" title="Zavřít">&#10005;</div>
    <form action=$Description method="POST">
     <textarea name="desc"></textarea>
-    $post_identity
+    $post_identity()
     <input type="hidden" name="date">
     <input type="submit" value="Odeslat">
    </form>
@@ -82,23 +83,10 @@ $endif
 </div>
 <br>
 <div id="tbldiv">
-$render("DebilCounter/table.witz", CONF.FCOLUMN, D_COUNTS, "D")
-$render("DebilCounter/table.witz", CONF.FCOLUMN2, B_COUNTS, "B")
+	<div id="section_D"></div>
+	<div id="section_B"></div>
 </div>
-<div style="text-align:center">
-<h2>Historie</h2>
-$for(i in HISTORY)
- <div class="story $i.EVENT">
-  <div class="header">
-    $i.USER_ID, $time(i.DAY)
-    $if(i.USER_ID == .user)
-     <img class="icon" valign="middle" src="static/DebilCounter/edit.png" onclick="showEditForm($i.TIMESTAMP, '$i.EVENT', '$i.DESC')" alt="Upravit" title="Upravit">
-    $endif
-  </div>
-  $if(i.DESC != "") <div class="body">$i.DESC</div> $endif
- </div>
-$endfor
-</div>
+<div style="text-align:center" id="history"></div>
 $if(PING == "true")
 <script>
 	new Audio('static/DebilCounter/ding.wav').play();

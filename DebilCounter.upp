@@ -9,6 +9,7 @@ file
 	Handlers.icpp,
 	Main.cpp,
 	ding.wav,
+	history.witz,
 	table.witz,
 	button.witz,
 	index.witz,

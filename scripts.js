@@ -1,7 +1,14 @@
 var timeZoneOffset = new Date().getTimezoneOffset()*60000;
 
-var printDate = function(x) {
-	document.write((new Date(x+timeZoneOffset)).toLocaleString());
+var printDate = function(e,x) {
+	var d = (new Date(x+timeZoneOffset)).toLocaleString();
+	e.insertAdjacentText("afterEnd", d);
+	e.remove();
+}
+
+var printConf = function(e,x) {
+	e.insertAdjacentText("afterEnd", conf[x]);
+	e.remove();
 }
 
 var toggleConf = function() {
@@ -79,3 +86,33 @@ var showEditForm = function(timestamp, event, desc) {
 var hideEditForm = function(timestamp, event, desc) {
 	document.getElementById("describe").style.display = "none";
 }
+
+var reload = function(last) {
+	conf.last = last;
+	UxPost($Tables);
+	UxPost($History);
+}
+
+var checkChanges = function() {
+	if(!document[conf.hidden])
+		UxPost($Changed("")+conf.last);
+}
+
+var conf = $json(CONF);
+
+var init = function() {
+	conf["last"] = 0;
+	conf["hidden"] = "";
+	if (typeof document.hidden !== "undefined") {
+		conf.hidden = "hidden";
+	} else if (typeof document.mozHidden !== "undefined") {
+		conf.hidden = "mozHidden";
+	} else if (typeof document.msHidden !== "undefined") {
+		conf.hidden = "msHidden";
+	} else if (typeof document.webkitHidden !== "undefined") {
+		conf.hidden = "webkitHidden";
+	}
+	setInterval(checkChanges, 5000);
+}
+
+init();

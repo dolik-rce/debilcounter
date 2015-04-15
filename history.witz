@@ -1,0 +1,12 @@
+<h2>Historie</h2>
+$for(i in HISTORY)
+ <div class="story $i.EVENT">
+  <div class="header">
+    $i.USER_ID, $time(i.DAY)
+    $if(i.USER_ID == .user)
+     <img class="icon" valign="middle" src="static/DebilCounter/edit.png" onclick="showEditForm($i.TIMESTAMP, '$i.EVENT', '$i.DESC')" alt="Upravit" title="Upravit">
+    $endif
+  </div>
+  $if(i.DESC != "") <div class="body">$i.DESC</div> $endif
+ </div>
+$endfor
