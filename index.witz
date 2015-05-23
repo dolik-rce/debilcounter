@@ -99,5 +99,6 @@ $if(PING == "true")
 	new Audio('static/DebilCounter/ding.wav').play();
 </script>
 $endif
+<div id="forkme"><div><a href="https://github.com/dolik-rce/debilcounter">Fork me on GitHub</a></div></div>
 </body>
 </html>

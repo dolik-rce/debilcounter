@@ -2,6 +2,7 @@ body {
 	margin: 0;
 	padding-bottom: 20px;
 	width: 100%;
+	position: relative;
 }
 
 table {
@@ -159,4 +160,47 @@ input {
 .modlink {
 	text-decoration: none;
 	font-size: small;
+}
+
+#forkme div {
+	white-space: nowrap;
+	text-align: center;
+	position: relative;
+	top: 80px;
+	right: 10px;
+	width: 200px;
+	-webkit-transform: rotate(-45deg);
+	-moz-transform: rotate(-45deg);
+	-ms-transform: rotate(-45deg);
+	transform: rotate(-45deg);
+	background-color: $CONF.BGCOLOR2;
+	transition: inherit;
+}
+
+#forkme div:hover {
+	background-color: $CONF.BGCOLOR;
+}
+
+#forkme a {
+	position: relative;
+	color: $CONF.FGCOLOR2;
+	font-size: small;
+	text-decoration: none;
+	transition: inherit;
+	/* webkit antialias fix */
+	-webkit-backface-visibility: hidden;
+}
+
+#forkme a:hover {
+	color: $CONF.FGCOLOR;
+}
+
+#forkme {
+	position: absolute;
+	overflow: hidden;
+	bottom: 0;
+	right: 0;
+	height: 150px;
+	width: 150px;
+	transition:0.5s;
 }
