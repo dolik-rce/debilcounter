@@ -90,7 +90,7 @@ var hideEditForm = function(timestamp, event, desc) {
 var reload = function(last) {
 	conf.last = last;
 	UxPost($Tables);
-	UxPost($History);
+	UxPost($History("") + conf["historyCount"]);
 }
 
 var checkChanges = function() {
@@ -112,10 +112,17 @@ var toggleEmpty = function(x, e) {
 	return false;
 }
 
+var moreHistory = function() {
+	conf["historyCount"] += 20;
+	UxPost($History("") + conf["historyCount"]);
+	return false;
+}
+
 var conf = $json(CONF);
 
 var init = function() {
 	conf["last"] = 0;
+	conf["historyCount"] = 20;
 	conf["hidden"] = "";
 	conf["inactiveHiddenB"] = true;
 	conf["inactiveHiddenD"] = true;

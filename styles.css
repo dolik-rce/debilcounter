@@ -1,5 +1,6 @@
 body {
 	margin: 0;
+	padding-bottom: 20px;
 	width: 100%;
 }
 
@@ -153,4 +154,9 @@ input {
 	right: 2px;
 	z-index: 200;
 	cursor: pointer;
+}
+
+.modlink {
+	text-decoration: none;
+	font-size: small;
 }

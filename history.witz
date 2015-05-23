@@ -1,4 +1,3 @@
-<h2>Historie</h2>
 $for(i in HISTORY)
  <div class="story $i.EVENT">
   <div class="header">

@@ -143,25 +143,25 @@ SKYLARK(Tables, "data:POST") {
 		}
 	}
 	http("EVENT", "D")("CONFNAME","FCOLUMN")("DATA", data1);
-	http.Ux("section_D", http.RenderString("DebilCounter/table.witz"));
+	http.UxRender("section_D", "DebilCounter/table.witz");
 	http("EVENT", "B")("CONFNAME","FCOLUMN2")("DATA", data2);
-	http.Ux("section_B", http.RenderString("DebilCounter/table.witz"));
+	http.UxRender("section_B", "DebilCounter/table.witz");
 }
 
-SKYLARK(History, "history:POST") {
+SKYLARK(History, "history/*:POST") {
 	RLOG(http.GetPeerAddr());
 	ValueMap vm;
 	Value history;
 	SQLR * Select(USER_ID, EVENT, DAY, DESC)
 	.From(DATA)
 	.OrderBy(Descending(DAY))
-	.Limit(20);
+	.Limit(http.Int(0));
 	while (SQLR.Fetch(vm)) {
 		vm.Set("TIMESTAMP", GetUTCSeconds(vm["DAY"]));
 		history.Add(vm);
 	}
 	http("HISTORY", history);
-	http.Ux("history", http.RenderString("DebilCounter/history.witz"));
+	http.UxRender("history", "DebilCounter/history.witz");
 }
 
 SKYLARK(Changed, "changed/*:POST") {
