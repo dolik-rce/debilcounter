@@ -90,6 +90,10 @@ $endif
 	<a href="#" class="modlink" onclick="return toggleEmpty(this, 'B')">Zobrazit neaktivní uživatele</a>
 </div>
 <div style="text-align:center">
+	<div id="monthly_D"></div>
+	<div id="monthly_B"></div>
+</div>
+<div style="text-align:center">
 	<h2>Historie</h2>
 	<div id="history"></div>
 	<a href="#" class="modlink" onclick="return moreHistory()">Více ...</a>

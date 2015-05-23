@@ -164,6 +164,53 @@ SKYLARK(History, "history/*:POST") {
 	http.UxRender("history", "DebilCounter/history.witz");
 }
 
+SKYLARK(MonthlyAward, "monthly:POST") {
+	RLOG(http.GetPeerAddr());
+	ValueMap vm;
+	ValueArray data1, data2;
+	Date to = --FirstDayOfMonth(GetUtcTime());
+	Date from = FirstDayOfMonth(to);
+
+	SqlSet subselect1 = Select(
+	    USER_ID,
+	    EVENT,
+	    Count(SqlAll()).As("CNT"),
+	    SqlFunc("strftime", SqlSet("%m", DAY)).As("MONTH"),
+	    SqlFunc("strftime", SqlSet("%Y", DAY)).As("YEAR"))
+	.From(DATA)
+	.GroupBy(SqlSet(USER_ID, EVENT, SqlId("MONTH"), SqlId("YEAR")))
+	.OrderBy(Lower(USER_ID))
+	.AsTable("SUB1");
+
+	SqlSet subselect2 = Select(
+	    SqlFunc("group_concat", USER_ID).As("USER_ID"),
+	    EVENT,
+	    SqlId("CNT"),
+	    SqlId("MONTH"),
+	    SqlId("YEAR"))
+	.From(subselect1)
+	.GroupBy(SqlSet(EVENT, SqlId("CNT"), SqlId("MONTH"), SqlId("YEAR")))
+	.AsTable("SUB2");
+
+	SQLR * Select(USER_ID, EVENT, SqlMax(SqlId("CNT")).As("CNT"), SqlId("MONTH"), SqlId("YEAR"))
+	.From(subselect2)
+	.GroupBy(EVENT, SqlId("MONTH"), SqlId("YEAR"))
+	.OrderBy(SqlId("YEAR"), SqlId("MONTH"), EVENT);
+
+	while (SQLR.Fetch(vm)) {
+		if (vm["EVENT"] == "D") {
+			data1.Add(vm);
+		}
+		if (vm["EVENT"] == "B") {
+			data2.Add(vm);
+		}
+	}
+	http("EVENT", "D")("CONFNAME","FCOLUMN")("DATA", data1);
+	http.UxRender("monthly_D", "DebilCounter/monthly.witz");
+	http("EVENT", "B")("CONFNAME","FCOLUMN2")("DATA", data2);
+	http.UxRender("monthly_B", "DebilCounter/monthly.witz");
+}
+
 SKYLARK(Changed, "changed/*:POST") {
 	RLOG(http.GetPeerAddr());
 	Time since(http.Int(0));

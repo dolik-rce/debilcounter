@@ -1,14 +1,28 @@
 var timeZoneOffset = new Date().getTimezoneOffset()*60000;
 
-var printDate = function(e,x) {
-	var d = (new Date(x+timeZoneOffset)).toLocaleString();
-	e.insertAdjacentText("afterEnd", d);
+var asyncWrite = function(e, x) {
+	e.insertAdjacentText("afterEnd", x);
 	e.remove();
 }
 
+var printDate = function(e,x) {
+	var d = (new Date(x+timeZoneOffset)).toLocaleString();
+	asyncWrite(e, d);
+}
+
+var monthNames = ["Leden", "Únor", "Březen", "Duben", "Květen", "Červen", "Červenec", "Srpen", "Září", "Říjen", "Listopad", "Prosinec"];
+
+var printMonth = function(e,m,y) {
+	asyncWrite(e, monthNames[m-1] + " " + y);
+}
+
+var printDate = function(e,x) {
+	var d = (new Date(x+timeZoneOffset)).toLocaleString();
+	asyncWrite(e, d);
+}
+
 var printConf = function(e,x) {
-	e.insertAdjacentText("afterEnd", conf[x]);
-	e.remove();
+	asyncWrite(e, conf[x]);
 }
 
 var toggleConf = function() {
@@ -90,12 +104,13 @@ var hideEditForm = function(timestamp, event, desc) {
 var reload = function(last) {
 	conf.last = last;
 	UxPost($Tables);
+	UxPost($MonthlyAward);
 	UxPost($History("") + conf["historyCount"]);
 }
 
 var checkChanges = function() {
 	if(!document[conf.hidden])
-		UxPost($Changed("")+conf.last);
+		UxPost($Changed("") + conf.last);
 }
 
 var toggleEmpty = function(x, e) {

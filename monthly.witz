@@ -1,0 +1,16 @@
+<h2><img src="" onerror="printConf(this, '$CONFNAME')"> měsíce</h2>
+<table>
+<thead>
+<tr>
+ <th>Měsíc</th>
+ <th id="fcolumn$EVENT"><img src="" onerror="printConf(this, '$CONFNAME')"></th>
+ <th>Skóre</th>
+</tr>
+</thead>
+$for(i in DATA)
+ <th><img src="" onerror="printMonth(this, $i.MONTH, $i.YEAR)"></th>
+ <td>$i.USER_ID</td>
+ <td>$i.CNT</td>
+ </tr>
+$endfor
+</table>
