@@ -1,5 +1,5 @@
 <h2>Kdo je <img src="" onerror="printConf(this, '$CONFNAME')">?</h2>
-<table class="sortable">
+<table class="sortable hideempty">
 <thead>
 <tr>
  <th id="fcolumn$EVENT"><img src="" onerror="printConf(this, '$CONFNAME')"></th>
@@ -13,7 +13,11 @@
 </tr>
 </thead>
 $for(i in DATA)
+ $if(i.MONTH)
  <tr>
+ $else
+ <tr class="emptyrow$EVENT">
+ $endif
  <th>$i.ID</th>
  <td sorttable_customkey="$i.TIMESTAMP">$time(i.LAST)</td>
  <td sorttable_customkey="$i.TIMESTAMP">$duration(i.LAST)</td>

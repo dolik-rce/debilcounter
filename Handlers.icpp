@@ -19,6 +19,13 @@ SKYLARK(HomePage, "") {
 		       .From(USER)
 		       .Where(ID == http[".user"]);
 		SQLR.Fetch(conf);
+	} else {
+		conf.Add("FCOLUMN", "Debil");
+		conf.Add("FCOLUMN2", "Borec");
+		conf.Add("FGCOLOR", "white");
+		conf.Add("FGCOLOR2", "white");
+		conf.Add("BGCOLOR", "red");
+		conf.Add("BGCOLOR2", "green");
 	}
 	if (!IsNull(http[".ping"])) {
 		http("PING", true);

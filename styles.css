@@ -43,6 +43,10 @@ td, th {
 	line-height: 3.5;
 }
 
+.hideinactive .emptyrowB, .hideinactive .emptyrowD {
+	display: none;
+}
+
 #conf {
  border : solid black 1px;
  position: absolute;

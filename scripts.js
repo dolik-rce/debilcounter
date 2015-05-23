@@ -98,11 +98,27 @@ var checkChanges = function() {
 		UxPost($Changed("")+conf.last);
 }
 
+var toggleEmpty = function(x, e) {
+	var section = document.getElementById("section_" + e);
+	var confId = "inactiveHidden" + e;
+	if(conf[confId]) {
+		section.className = "";
+		x.innerText = "Skrýt neaktivní uživatele";
+	} else {
+		section.className = "hideinactive";
+		x.innerText = "Zobrazit neaktivní uživatele";
+	}
+	conf[confId] = !conf[confId];
+	return false;
+}
+
 var conf = $json(CONF);
 
 var init = function() {
 	conf["last"] = 0;
 	conf["hidden"] = "";
+	conf["inactiveHiddenB"] = true;
+	conf["inactiveHiddenD"] = true;
 	if (typeof document.hidden !== "undefined") {
 		conf.hidden = "hidden";
 	} else if (typeof document.mozHidden !== "undefined") {

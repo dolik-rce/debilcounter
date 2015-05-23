@@ -77,14 +77,17 @@ $else
    <span class="error">Špatné heslo!</span><br>
   $endif
   <input type="submit" value="Registrovat / Přihlásit se">
+  $post_identity()
  </form>
  </div>
 $endif
 </div>
 <br>
 <div id="tbldiv">
-	<div id="section_D"></div>
-	<div id="section_B"></div>
+	<div id="section_D" class="hideinactive"></div>
+	<small><a href="#" onclick="return toggleEmpty(this, 'D')">Zobrazit neaktivní uživatele</a></small>
+	<div id="section_B" class="hideinactive"></div>
+	<small><a href="#" onclick="return toggleEmpty(this, 'B')">Zobrazit neaktivní uživatele</a></small>
 </div>
 <div style="text-align:center" id="history"></div>
 $if(PING == "true")
