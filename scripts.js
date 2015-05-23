@@ -133,10 +133,17 @@ var moreHistory = function() {
 	return false;
 }
 
+var loadWaiter = function() {
+	if(conf.loaded < 3) return;
+	clearInterval(conf["visibilityLoop"]);
+	document.body.style.display="";
+}
+
 var conf = $json(CONF);
 
 var init = function() {
 	conf["last"] = 0;
+	conf["loaded"] = 0;
 	conf["historyCount"] = 20;
 	conf["hidden"] = "";
 	conf["inactiveHiddenB"] = true;
@@ -151,6 +158,7 @@ var init = function() {
 		conf.hidden = "webkitHidden";
 	}
 	setInterval(checkChanges, 5000);
+	conf["visibilityLoop"] = setInterval(loadWaiter, 50);
 }
 
 init();

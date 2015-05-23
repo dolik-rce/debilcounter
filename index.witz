@@ -13,7 +13,7 @@
 		#include DebilCounter/scripts.js
 	</script>
 </head>
-<body onload='checkChanges();'>
+<body onload='checkChanges();' style="display:none;">
 $if(.logged == "true")
  <div id="describe" style="display:none">
    <div class="close" onclick="hideEditForm();" title="Zavřít">&#10005;</div>

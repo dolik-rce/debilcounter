@@ -146,6 +146,7 @@ SKYLARK(Tables, "data:POST") {
 	http.UxRender("section_D", "DebilCounter/table.witz");
 	http("EVENT", "B")("CONFNAME","FCOLUMN2")("DATA", data2);
 	http.UxRender("section_B", "DebilCounter/table.witz");
+	http.UxRun("conf.loaded += 1;");
 }
 
 SKYLARK(History, "history/*:POST") {
@@ -162,6 +163,7 @@ SKYLARK(History, "history/*:POST") {
 	}
 	http("HISTORY", history);
 	http.UxRender("history", "DebilCounter/history.witz");
+	http.UxRun("conf.loaded += 1;");
 }
 
 SKYLARK(MonthlyAward, "monthly:POST") {
@@ -209,6 +211,7 @@ SKYLARK(MonthlyAward, "monthly:POST") {
 	http.UxRender("monthly_D", "DebilCounter/monthly.witz");
 	http("EVENT", "B")("CONFNAME","FCOLUMN2")("DATA", data2);
 	http.UxRender("monthly_B", "DebilCounter/monthly.witz");
+	http.UxRun("conf.loaded += 1;");
 }
 
 SKYLARK(Changed, "changed/*:POST") {
