@@ -36,6 +36,11 @@ td, th {
  -moz-border-radius: 15px;
  border-radius: 15px;
  padding: 20px;
+ white-space: nowrap;
+}
+
+.btndiv {
+	line-height: 3.5;
 }
 
 #conf {
@@ -63,7 +68,6 @@ td, th {
 
 #inclink {
 	text-decoration:none;
-	margin: 20px;
 }
 
 #tbldiv {

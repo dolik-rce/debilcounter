@@ -32,7 +32,7 @@ $if(.logged == "true")
   <a href="" onclick="return toggleConf();">Nastavení</a><br>
   <a href="logout">Odhlásit se</a>
  </div>
- <div align="center">
+ <div class="btndiv" align="center">
   $render("DebilCounter/button.witz", "D", CONF.MSG, CONF.FCOLUMN)
   $render("DebilCounter/button.witz", "B", CONF.MSG2, CONF.FCOLUMN2)
  </div>
