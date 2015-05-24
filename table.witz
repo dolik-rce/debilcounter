@@ -1,8 +1,8 @@
-<h2>Kdo je <img src="" onerror="printConf(this, '$CONFNAME')">?</h2>
+<h2>Kdo je $async("printConf(this, '"+CONFNAME+"')")?</h2>
 <table class="sortable hideempty">
 <thead>
 <tr>
- <th id="fcolumn$EVENT"><img src="" onerror="printConf(this, '$CONFNAME')"></th>
+ <th id="fcolumn$EVENT">$async("printConf(this, '"+CONFNAME+"')")</th>
  <th>Naposledy<span id="sorttable_sortrevind">&nbsp;&#x25BE;</span></th>
  <th>Stáří</th>
  <th>Dnes</th>
@@ -30,5 +30,5 @@ $for(i in DATA)
 $endfor
 </table>
 <a href="#" class="modlink" onclick="return toggleEmpty(this, '$EVENT')">
-<img src="" onerror="asyncWrite(this, conf['inactiveHidden$EVENT']?'Zobrazit':'Skrýt')"> neaktivní uživatele
+$async("asyncWrite(this, conf['inactiveHidden"+EVENT+"']?'Zobrazit':'Skrýt')") neaktivní uživatele
 </a>

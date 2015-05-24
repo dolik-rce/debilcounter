@@ -48,12 +48,19 @@ Value AsJSON(const Vector<Value>& arg, const Renderer *r) {
 	return Raw(AsJSON(arg[0]));
 }
 
+Value AsyncScript(const Vector<Value>& arg, const Renderer *r) {
+	if (arg.GetCount() < 1)
+		return "";
+	return Raw("<img src=\"\" onerror=\"" + AsString(arg[0]) + "\">");
+}
+
 
 INITBLOCK {
 	Compiler::Register("time", LocalTime);
 	Compiler::Register("duration", Duration);
 	Compiler::Register("render", Render);
 	Compiler::Register("json", AsJSON);
+	Compiler::Register("async", AsyncScript);
 };
 
 

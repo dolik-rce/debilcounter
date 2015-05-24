@@ -1,15 +1,15 @@
-<h2><img src="" onerror="printConf(this, '$CONFNAME')"> měsíce</h2>
+<h2>$async("printConf(this, '"+CONFNAME+"')") měsíce</h2>
 <table>
 <thead>
 <tr>
  <th>Měsíc</th>
- <th id="fcolumn$EVENT"><img src="" onerror="printConf(this, '$CONFNAME')"></th>
+ <th id="fcolumn$EVENT">$async("printConf(this, '"+CONFNAME+"')")</th>
  <th>Skóre</th>
 </tr>
 </thead>
 $for(i in DATA)
  <th>
-  <img src="" onerror="printMonth(this, $i.MONTH, $i.YEAR)">
+  $async("printMonth(this, "+i.MONTH+", "+i.YEAR+")")
   $if(i.CURRENT)<br><small>(průběžné pořadí)</small>$endif
  </th>
  <td>$i.USER_ID</td>
