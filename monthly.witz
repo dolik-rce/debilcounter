@@ -8,7 +8,10 @@
 </tr>
 </thead>
 $for(i in DATA)
- <th><img src="" onerror="printMonth(this, $i.MONTH, $i.YEAR)"></th>
+ <th>
+  <img src="" onerror="printMonth(this, $i.MONTH, $i.YEAR)">
+  $if(i.CURRENT)<br><small>(průběžné pořadí)</small>$endif
+ </th>
  <td>$i.USER_ID</td>
  <td>$i.CNT</td>
  </tr>

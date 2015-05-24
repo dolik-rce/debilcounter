@@ -135,10 +135,10 @@ SKYLARK(Tables, "data:POST") {
 	while (SQLR.Fetch(vm)){
 		vm.Set("LAST", ScanTime("ymd", AsString(vm["LAST"])));
 		vm.Set("TIMESTAMP", GetUTCSeconds(vm["LAST"]));
-		if (vm["EVENT"] != "B") {
+		if (vm["EVENT"] == "D") {
 			data1.Add(vm);
 		}
-		if (vm["EVENT"] != "D") {
+		if (vm["EVENT"] == "B") {
 			data2.Add(vm);
 		}
 	}
@@ -170,8 +170,7 @@ SKYLARK(MonthlyAward, "monthly:POST") {
 	RLOG(http.GetPeerAddr());
 	ValueMap vm;
 	ValueArray data1, data2;
-	Date to = --FirstDayOfMonth(GetUtcTime());
-	Date from = FirstDayOfMonth(to);
+	Date thismonth = FirstDayOfMonth(GetUtcTime());
 
 	SqlSet subselect1 = Select(
 	    USER_ID,
@@ -200,6 +199,8 @@ SKYLARK(MonthlyAward, "monthly:POST") {
 	.OrderBy(SqlId("YEAR"), SqlId("MONTH"), EVENT);
 
 	while (SQLR.Fetch(vm)) {
+		if (StrInt(AsString(vm["YEAR"])) == thismonth.year && StrInt(AsString(vm["MONTH"])) == thismonth.month)
+			vm.Add("CURRENT", true);
 		if (vm["EVENT"] == "D") {
 			data1.Add(vm);
 		}
