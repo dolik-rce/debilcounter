@@ -134,7 +134,9 @@ var moreHistory = function() {
 }
 
 var loadWaiter = function() {
-	if(conf.loaded < 3) return;
+	var loadTime = new Date() - conf["initTime"];
+	if(conf.loaded < (3 - loadTime / 1000))
+		return;
 	clearInterval(conf["visibilityLoop"]);
 	document.body.style.display="";
 }
@@ -142,6 +144,7 @@ var loadWaiter = function() {
 var conf = $json(CONF);
 
 var init = function() {
+	conf["initTime"] = new Date();
 	conf["last"] = 0;
 	conf["loaded"] = 0;
 	conf["historyCount"] = 20;
