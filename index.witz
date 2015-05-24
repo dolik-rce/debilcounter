@@ -85,18 +85,14 @@ $endif
 <br>
 <div id="tbldiv">
 	<div id="section_D" class="hideinactive"></div>
-	<a href="#" class="modlink" onclick="return toggleEmpty(this, 'D')">Zobrazit neaktivní uživatele</a>
 	<div id="section_B" class="hideinactive"></div>
-	<a href="#" class="modlink" onclick="return toggleEmpty(this, 'B')">Zobrazit neaktivní uživatele</a>
 </div>
 <div style="text-align:center">
 	<div id="monthly_D"></div>
 	<div id="monthly_B"></div>
 </div>
 <div style="text-align:center">
-	<h2>Historie</h2>
 	<div id="history"></div>
-	<a href="#" class="modlink" onclick="return moreHistory()">Více ...</a>
 </div>
 $if(PING == "true")
 <script>

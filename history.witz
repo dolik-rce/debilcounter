@@ -1,3 +1,4 @@
+<h2>Historie</h2>
 $for(i in HISTORY)
  <div class="story $i.EVENT">
   <div class="header">
@@ -9,3 +10,4 @@ $for(i in HISTORY)
   $if(i.DESC != "") <div class="body">$i.DESC</div> $endif
  </div>
 $endfor
+<a href="#" class="modlink" onclick="return moreHistory()">Více ...</a>

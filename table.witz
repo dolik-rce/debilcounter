@@ -29,3 +29,6 @@ $for(i in DATA)
  </tr>
 $endfor
 </table>
+<a href="#" class="modlink" onclick="return toggleEmpty(this, '$EVENT')">
+<img src="" onerror="asyncWrite(this, conf['inactiveHidden$EVENT']?'Zobrazit':'Skrýt')"> neaktivní uživatele
+</a>
