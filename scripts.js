@@ -1,7 +1,8 @@
 var timeZoneOffset = new Date().getTimezoneOffset()*60000;
 
 var asyncWrite = function(e, x) {
-	e.insertAdjacentText("afterEnd", x);
+	var t = document.createTextNode(x);
+	e.parentNode.insertBefore(t, e.nextSibling);
 	e.remove();
 }
 
