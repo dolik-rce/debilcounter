@@ -147,6 +147,7 @@ SKYLARK(Tables, "data:POST") {
 	http("EVENT", "B")("CONFNAME","FCOLUMN2")("DATA", data2);
 	http.UxRender("section_B", "DebilCounter/table.witz");
 	http.UxRun("conf.loaded += 1;");
+	http.UxRun("tablesLoaded();");
 }
 
 SKYLARK(History, "history/*:POST") {

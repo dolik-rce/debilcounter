@@ -134,6 +134,12 @@ var moreHistory = function() {
 	return false;
 }
 
+var tablesLoaded = function() {
+	var t = document.getElementsByClassName("sortable");
+	for (var i = 0; i < t.length; ++i)
+		sorttable.makeSortable(t[i]);
+}
+
 var loadWaiter = function() {
 	var loadTime = new Date() - conf["initTime"];
 	if(conf.loaded < (3 - loadTime / 1000))
