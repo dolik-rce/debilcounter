@@ -95,7 +95,9 @@ input {
 	-moz-border-radius: 5px;
 	border-radius: 5px;
 	padding: 5px;
-	margin: 10px 25%;
+	margin: 10px auto;
+	min-width: 300px;
+	max-width: 60%;
 }
 
 .icon {
