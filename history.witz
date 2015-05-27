@@ -4,7 +4,7 @@ $for(i in HISTORY)
   <div class="header">
     $i.USER_ID, $time(i.DAY)
     $if(i.USER_ID == .user)
-     <img class="icon" valign="middle" src="static/DebilCounter/edit.png" onclick="showEditForm($i.TIMESTAMP, '$i.EVENT', '$i.DESC')" alt="Upravit" title="Upravit">
+     <svg class="icon" onclick="showEditForm($i.TIMESTAMP, '$i.EVENT', '$i.DESC')"><title>Upravit...</title><desc>Upravit...</desc><use xlink:href="#editicon$i.EVENT"/></svg>
     $endif
   </div>
   $if(i.DESC != "") <div class="body">$i.DESC</div> $endif

@@ -103,6 +103,20 @@ input {
 .icon {
 	width: 1eM;
 	height: 1eM;
+	vertical-align: middle;
+	cursor: pointer;
+}
+
+.editiconD {
+	fill: $CONF.FGCOLOR;
+}
+
+.editiconB {
+	fill: $CONF.FGCOLOR2;
+}
+
+.invisible {
+	display: none;
 }
 
 #describe {
