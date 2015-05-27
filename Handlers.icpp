@@ -110,6 +110,10 @@ SKYLARK(Settings, "settings") {
 		            (BGCOLOR, http["bgcolor"])
 		            (FCOLUMN, http["fcolumn"])
 		            (MSG, http["msg"])
+		            (FGCOLOR2, http["fgcolor2"])
+		            (BGCOLOR2, http["bgcolor2"])
+		            (FCOLUMN2, http["fcolumn2"])
+		            (MSG2, http["msg2"])
 		      .Where(ID == http[".user"]);
 	}
 	http.Redirect(HomePage);
