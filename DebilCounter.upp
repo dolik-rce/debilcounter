@@ -14,9 +14,11 @@ file
 	history.witz,
 	monthly.witz,
 	table.witz,
+	feed.witz,
 	styles.css,
 	scripts.js,
-	sorttable.js;
+	sorttable.js,
+	feed_example.html;
 
 mainconfig
 	"" = "MT SSE2";

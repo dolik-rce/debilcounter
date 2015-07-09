@@ -86,7 +86,7 @@ SKYLARK(Count, "count/*") {
 	String event = http[0];
 	if (http[".logged"] && (event == "B" || event == "D")) {
 		Time time = GetSysTime();
-		SQL * Insert(DATA)(DAY, time)(USER_ID, http[".user"])(EVENT, event);
+		SQL * Insert(DATA)(DAY, time)(EDITED, time)(USER_ID, http[".user"])(EVENT, event);
 		http.SessionSet(".ping", time);
 		http.SessionSet(".ping_event", event);
 	}
@@ -96,7 +96,7 @@ SKYLARK(Count, "count/*") {
 SKYLARK(Description, "description:POST") {
 	RLOG(http.GetPeerAddr());
 	if (http[".logged"]) {
-		SQL * Update(DATA)(DESC, http["desc"])
+		SQL * Update(DATA)(DESC, http["desc"])(EDITED, GetSysTime())
 		      .Where(USER_ID == http[".user"] && DAY == TimeFromUTC(http.Int("date")));
 	}
 	http.Redirect(HomePage);
@@ -225,11 +225,35 @@ SKYLARK(Changed, "changed/*:POST") {
 	Time since(http.Int(0));
 	SQLR * Select(SqlMax(DAY))
 	       .From(DATA)
-	       .Where(DAY>since);
+	       .Where(EDITED>since);
 	Time t(0);
 	SQLR.Fetch(t);
 	if (!IsNull(t))
 		http.UxRun("reload("+IntStr(t.AsFileTime())+");");
+}
+
+SKYLARK(Feed, "feed/*:POST_RAW") {
+	RLOG(http.GetPeerAddr());
+	Time since(http.Int(0));
+	ValueMap vm;
+	ValueArray history;
+
+	SQLR * Select(USER_ID, EVENT, DAY, DESC, (DAY!=EDITED && EDITED>since).As("UPDATED"))
+	.From(DATA)
+	.Where(EDITED > since)
+	.OrderBy(Descending(DAY))
+	.Limit(20);
+
+	while (SQLR.Fetch(vm)) {
+		vm.Set("TIMESTAMP", GetUTCSeconds(vm["DAY"]));
+		history.Add(vm);
+	}
+
+	http("HISTORY", history)
+	    ("LAST", (int64)GetSysTime().AsFileTime())
+	    ("CB", Nvl(http["cb"],"debilcounter"));
+	RawHtmlText resp = http.Render("DebilCounter/feed.witz").To<RawHtmlText>();
+	http.UxRun(resp.text);
 }
 
 SKYLARK(Favicon, "favicon.ico") {

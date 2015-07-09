@@ -1,0 +1,75 @@
+<html>
+<head>
+<script src="http://localhost:8001/static/Skylark/skylark.js"></script>
+<script>
+var timeZoneOffset = new Date().getTimezoneOffset()*60000;
+var __js_identity__ = null;
+var last = 0;
+var hidden = false;
+
+var ts2DateStr = function(x) {
+	return (new Date(1000*x+timeZoneOffset)).toLocaleString();
+}
+
+var callback = function(t, data) {
+	last = t;
+	var html="";
+	if (data.length) console.log(data);
+	for(var i=data.length-1; i>=0; --i) {
+		if(data[i].UPDATED) {
+			var e = document.querySelector('#'+data[i].EVENT + data[i].TIMESTAMP + " .body");
+			if (e) {
+				e.innerText = data[i].DESC;
+				continue;
+			}
+		}
+		var d = document.createElement("div");
+		d.id = data[i].EVENT + data[i].TIMESTAMP;
+		d.className = data[i].EVENT;
+		d.innerHTML = '<div class="head">' + data[i].USER_ID + ' ' + ts2DateStr(data[i].TIMESTAMP) + '</div>'
+			+ '<div class="body">' + data[i].DESC+ "</div>";
+		document.body.insertBefore(d, document.body.firstChild);
+	}
+}
+
+var checkChanges = function() {
+	if(!document[hidden])
+		UxPost("http://localhost:8001/feed/" + last + "?cb=callback");
+}
+
+var init = function() {
+	checkChanges();
+	setInterval(checkChanges, 5000);
+	if (typeof document.hidden !== "undefined") {
+		hidden = "hidden";
+	} else if (typeof document.mozHidden !== "undefined") {
+		hidden = "mozHidden";
+	} else if (typeof document.msHidden !== "undefined") {
+		hidden = "msHidden";
+	} else if (typeof document.webkitHidden !== "undefined") {
+		hidden = "webkitHidden";
+	}
+}
+</script>
+<style>
+body {
+	text-align: center;
+}
+.B, .D {
+	font-family: Arial;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	padding: 5px;
+	margin: 10px auto;
+	color: white;
+}
+.B {
+	background-color: green;
+}
+.D {
+	background-color: red;
+}
+</style>
+</head>
+<body onload="init();"></body>
+</html>
