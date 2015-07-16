@@ -249,6 +249,7 @@ SKYLARK(Feed, "feed/*:POST_RAW") {
 		history.Add(vm);
 	}
 
+	http.SetHeader("Access-Control-Allow-Origin","*");
 	http("HISTORY", history)
 	    ("LAST", (int64)GetSysTime().AsFileTime())
 	    ("CB", Nvl(http["cb"],"debilcounter"));
